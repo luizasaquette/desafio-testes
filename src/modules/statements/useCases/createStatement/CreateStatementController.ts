@@ -7,14 +7,14 @@ enum OperationType {
   DEPOSIT = 'deposit',
   WITHDRAW = 'withdraw',
 }
-
 export class CreateStatementController {
   async execute(request: Request, response: Response) {
-    const { id: user_id } = request.user;
-    const { amount, description } = request.body;
+    const splittedPath = request.originalUrl.split('/');
+    const {
+      amount,
+      description
+    } = request.body;
 
-    const splittedPath = request.originalUrl.split('/')
-    const type = splittedPath[splittedPath.length - 1] as OperationType;
 
     const createStatement = container.resolve(CreateStatementUseCase);
 
@@ -22,7 +22,8 @@ export class CreateStatementController {
       user_id,
       type,
       amount,
-      description
+      description,
+      sender_id
     });
 
     return response.status(201).json(statement);
